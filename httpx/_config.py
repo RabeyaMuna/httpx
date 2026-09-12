@@ -135,7 +135,7 @@ class SSLContext(ssl.SSLContext):
                     password=cert[2],
                 )
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"<SSLContext [verify={self.verify}]>"
 
     def __new__(
