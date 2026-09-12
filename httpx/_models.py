@@ -1050,19 +1050,28 @@ class Cookies(typing.MutableMapping[str, str]):
         urllib_request = self._CookieCompatRequest(request)
         self.jar.add_cookie_header(urllib_request)
 
-    def set(self, name: str, value: str, domain: str = "", path: str = "/") -> None:
+    def set(
+        self,
+        name: str,
+        value: str,
+        domain: typing.Optional[str] = None,
+        path: str = "/",
+    ) -> None:
         """
         Set a cookie value by name. May optionally include domain and path.
         """
+        # Normalize domain handling so that unspecified (None) and empty-string
+        # domains are treated consistently with lookup logic in get().
+        domain_value = domain or ""
         kwargs = {
             "version": 0,
             "name": name,
             "value": value,
             "port": None,
             "port_specified": False,
-            "domain": domain,
+            "domain": domain_value,
             "domain_specified": bool(domain),
-            "domain_initial_dot": domain.startswith("."),
+            "domain_initial_dot": (domain.startswith(".") if domain else False),
             "path": path,
             "path_specified": bool(path),
             "secure": False,
@@ -1097,9 +1106,7 @@ class Cookies(typing.MutableMapping[str, str]):
                             raise CookieConflict(message)
                         value = cookie.value
 
-        if value is None:
-            return default
-        return value
+        return value if value is not None else default
 
     def delete(
         self,
