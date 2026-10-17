@@ -1025,8 +1025,12 @@ class Cookies(typing.MutableMapping[str, str]):
                     self.set(key, value)
         elif isinstance(cookies, list):
             self.jar = CookieJar()
-            for key, value in cookies:
-                self.set(key, value)
+            for item in cookies:
+                if isinstance(item, tuple) and len(item) == 2:
+                    key, value = item
+                    self.set(key, value)
+                elif isinstance(item, http.cookiejar.Cookie):
+                    self.jar.set_cookie(item)
         elif isinstance(cookies, Cookies):
             self.jar = CookieJar()
             for cookie in cookies.jar:
@@ -1136,7 +1140,13 @@ class Cookies(typing.MutableMapping[str, str]):
         if domain is not None:
             args.append(domain)
         if path is not None:
-            assert domain is not None
+            if domain is None:
+                # If path is given but domain is None, clear cookies for all domains with that path.
+                # This requires iterating over cookies because CookieJar.clear() requires domain.
+                remove = [cookie for cookie in self.jar if cookie.path == path]
+                for cookie in remove:
+                    self.jar.clear(cookie.domain, cookie.path, cookie.name)
+                return
             args.append(path)
         self.jar.clear(*args)
 
