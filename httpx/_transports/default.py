@@ -129,6 +129,8 @@ class HTTPTransport(BaseTransport):
         local_address: typing.Optional[str] = None,
         retries: int = 0,
         socket_options: typing.Optional[typing.Iterable[SOCKET_OPTION]] = None,
+        verify: typing.Optional[typing.Union[str, bool]] = None,
+        cert: typing.Optional[typing.Union[str, typing.Tuple[str, str]]] = None,
     ) -> None:
         proxy = Proxy(url=proxy) if isinstance(proxy, (str, URL)) else proxy
         ssl_context = ssl_context or SSLContext()
@@ -268,6 +270,8 @@ class AsyncHTTPTransport(AsyncBaseTransport):
         local_address: typing.Optional[str] = None,
         retries: int = 0,
         socket_options: typing.Optional[typing.Iterable[SOCKET_OPTION]] = None,
+        verify: typing.Optional[typing.Union[str, bool]] = None,
+        cert: typing.Optional[typing.Union[str, typing.Tuple[str, str]]] = None,
     ) -> None:
         proxy = Proxy(url=proxy) if isinstance(proxy, (str, URL)) else proxy
         ssl_context = ssl_context or SSLContext()
