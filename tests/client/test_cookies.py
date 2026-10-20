@@ -145,7 +145,10 @@ def test_get_cookie() -> None:
 
     assert response.status_code == 200
     assert response.cookies["example-name"] == "example-value"
-    assert client.cookies["example-name"] == "example-value"
+    # The cookie should be stored in the client's cookie jar after the request
+    # Access via client.cookies.get() to avoid KeyError if not present
+    cookie_value = client.cookies.get("example-name")
+    assert cookie_value == "example-value"
 
 
 def test_cookie_persistence() -> None:
@@ -161,7 +164,10 @@ def test_cookie_persistence() -> None:
     response = client.get("http://example.org/set_cookie")
     assert response.status_code == 200
     assert response.cookies["example-name"] == "example-value"
-    assert client.cookies["example-name"] == "example-value"
+    # The cookie should be stored in the client's cookie jar after the request
+    # Access via client.cookies.get() to avoid KeyError if not present
+    cookie_value = client.cookies.get("example-name")
+    assert cookie_value == "example-value"
 
     response = client.get("http://example.org/echo_cookies")
     assert response.status_code == 200
