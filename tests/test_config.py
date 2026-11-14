@@ -68,6 +68,14 @@ def test_load_ssl_config_no_verify():
     assert context.check_hostname is False
 
 
+def test_ssl_context_repr():
+    context = httpx.SSLContext()
+    assert repr(context) == "<SSLContext [verify=True]>"
+
+    context = httpx.SSLContext(verify=False)
+    assert repr(context) == "<SSLContext [verify=False]>"
+
+
 def test_SSLContext_with_get_request(server, cert_pem_file):
     context = httpx.SSLContext(verify=cert_pem_file)
     response = httpx.get(server.url, ssl_context=context)
