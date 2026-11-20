@@ -170,3 +170,16 @@ def test_proxy_with_auth_from_url():
 def test_invalid_proxy_scheme():
     with pytest.raises(ValueError):
         httpx.Proxy("invalid://example.com")
+
+def test_unset_type():
+    from httpx._config import UNSET, UnsetType
+
+    assert isinstance(UNSET, UnsetType)
+
+
+def test_ssl_context_repr():
+    context = httpx.SSLContext()
+    assert repr(context) == "<SSLContext [verify=True]>"
+
+    context = httpx.SSLContext(verify=False)
+    assert repr(context) == "<SSLContext [verify=False]>"
