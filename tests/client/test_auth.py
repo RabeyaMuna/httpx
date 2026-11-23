@@ -296,6 +296,7 @@ def test_netrc_auth_nopassword() -> None:  # pragma: no cover
     sys.version_info >= (3, 11),
     reason="netrc files without a password are valid from Python >= 3.11",
 )
+@pytest.mark.skipif(sys.version_info >= (3, 11), reason="Netrc files without a password are valid from Python >= 3.11")
 def test_netrc_auth_nopassword_parse_error() -> None:  # pragma: no cover
     """
     Python has different netrc parsing behaviours with different versions.
