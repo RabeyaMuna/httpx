@@ -1149,8 +1149,8 @@ class Cookies(typing.MutableMapping[str, str]):
         return self.set(name, value)
 
     def __getitem__(self, name: str) -> str:
-        value = self.get(name)
-        if value is None:
+        value = self.get(name, "")
+        if not value:
             raise KeyError(name)
         return value
 
